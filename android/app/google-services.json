@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "971747636402",
+    "project_id": "rustyflutter-d3492",
+    "storage_bucket": "rustyflutter-d3492.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971747636402:android:cd2daaa14354f38da505ab",
+        "android_client_info": {
+          "package_name": "com.example.authentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "971747636402-eve6cjoe80tkf8v226t8buisu96ipgqe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.authentication",
+            "certificate_hash": "69f7e4146f4dc2aa753054e10996888f6dfd309f"
+          }
+        },
+        {
+          "client_id": "971747636402-r1ionugqloc51hd14nrjhshtta2ipgkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAW_4EwgCevWTHH83MHCwkbs6il-ziIto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "971747636402-r1ionugqloc51hd14nrjhshtta2ipgkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
