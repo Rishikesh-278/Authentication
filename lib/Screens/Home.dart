@@ -1,23 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'AuthService.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
-
-import 'BottomBar.dart';
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+import '../AuthService.dart';
+import 'package:http/http.dart' as http;
 
 String quote = "";
 String author = "";
 
-class _HomePageState extends State<HomePage> {
-  //String? user = FirebaseAuth.instance.currentUser!.email ?? FirebaseAuth.instance.currentUser!.displayName;
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,29 +45,33 @@ class _HomePageState extends State<HomePage> {
                                 style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(width: 30,),
+                              const SizedBox(
+                                width: 30,
+                              ),
                               CircleAvatar(
                                 backgroundImage: NetworkImage(FirebaseAuth
                                     .instance.currentUser!.photoURL!),
                               )
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Email:${FirebaseAuth.instance.currentUser!.email!}",
-                          style: TextStyle(fontSize: 15))
+                          Text(
+                              "Email:${FirebaseAuth.instance.currentUser!.email!}",
+                              style: const TextStyle(fontSize: 15))
                         ],
                       ),
                     ),
                   ],
                 ),
-
               ),
               MaterialButton(
-                  color: Colors.green,child: Text("Log out"),onPressed: () {
-                AuthService().signOut();
-              })
+                  color: Colors.green,
+                  child: const Text("Log out"),
+                  onPressed: () {
+                    AuthService().signOut();
+                  })
             ],
           ),
         ),
@@ -107,11 +108,14 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey[300],
                         border: Border.all(width: 0.1),
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
+                        const BorderRadius.all(Radius.circular(5))),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(child: Text(quote, style: const TextStyle(fontSize: 17))),
+                        Expanded(
+                            child: Text(quote,
+                                style: const TextStyle(fontSize: 17))),
                         const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.only(left: 250),
@@ -125,11 +129,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "API Calls on refresh  ⬆",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
     );
   }
 }

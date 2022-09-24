@@ -1,4 +1,4 @@
-import 'package:authentication/HomePage.dart';
+import 'package:authentication/MainPage.dart';
 import 'package:authentication/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +14,7 @@ class AuthService {
         {
           if(snapshot.hasData)
             {
-              return HomePage();
+              return MainPage();
             }
           else
             {
