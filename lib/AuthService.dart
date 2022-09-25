@@ -1,9 +1,8 @@
-import 'package:authentication/MainPage.dart';
 import 'package:authentication/LoginPage.dart';
-import 'package:flutter/material.dart';
+import 'package:authentication/MainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 
 class AuthService {
 

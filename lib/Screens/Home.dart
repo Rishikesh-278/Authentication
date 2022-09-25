@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
-import '../AuthService.dart';
 import 'package:http/http.dart' as http;
+import 'package:authentication/components/drawer.dart';
 
 String quote = "";
 String author = "";
@@ -22,60 +21,7 @@ class _HomeState extends State<Home> {
         title: const Text("Home"),
         centerTitle: true,
       ),
-      drawer: SafeArea(
-        child: Drawer(
-          child: Column(
-            children: <Widget>[
-              Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.white70,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                FirebaseAuth.instance.currentUser!.displayName!,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                width: 30,
-                              ),
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(FirebaseAuth
-                                    .instance.currentUser!.photoURL!),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                              "Email:${FirebaseAuth.instance.currentUser!.email!}",
-                              style: const TextStyle(fontSize: 15))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              MaterialButton(
-                  color: Colors.green,
-                  child: const Text("Log out"),
-                  onPressed: () {
-                    AuthService().signOut();
-                  })
-            ],
-          ),
-        ),
-      ),
+      drawer: const SafeDrawer(),
       body: RefreshIndicator(
         edgeOffset: 0.1,
         backgroundColor: Colors.black,

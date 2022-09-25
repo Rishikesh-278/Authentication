@@ -10,6 +10,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+
   int _CurrentIndex = 0;
 
   void onTapped(int index) {
@@ -22,6 +24,7 @@ class _MainPageState extends State<MainPage> {
     Home(),
     TimerPage(),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,4 +44,6 @@ class _MainPageState extends State<MainPage> {
       ],
     );
   }
+
+
 }
