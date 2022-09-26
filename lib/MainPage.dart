@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Screens/Home.dart';
 import 'Screens/Timer.dart';
+import 'Screens/ApiCalls.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,6 +23,7 @@ class _MainPageState extends State<MainPage> {
   final Screens = [
     Home(),
     TimerPage(),
+    ApiCalls(),
   ];
 
   @override
@@ -38,7 +40,8 @@ class _MainPageState extends State<MainPage> {
       currentIndex: _CurrentIndex,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.watch_later), label: "Timer")
+        BottomNavigationBarItem(icon: Icon(Icons.watch_later), label: "Timer"),
+        BottomNavigationBarItem(icon: Icon(Icons.api), label: "ApiCalls")
       ],
     );
   }

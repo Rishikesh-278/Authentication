@@ -1,96 +1,101 @@
+import 'package:authentication/data/database.dart';
+import 'package:authentication/utils/todo_tile.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:authentication/components/drawer.dart';
-
-String quote = "";
-String author = "";
+import 'package:authentication/utils/dialog_box.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+
+  //refernece the hive box
+  final _myBox = Hive.box('mybox');
+  ToDoDatabase db = ToDoDatabase();
+
+  // text controller
+  final _controller = TextEditingController();
+
   @override
+  void initState() {
+    // if this is the 1st time ever openin the app, then create default data
+    if (_myBox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      // there already exists data
+      db.loadData();
+    }
+    super.initState();
+  }
+
+  //This method changes the CheckBox
+  void checkBoxChanged(bool? value, int index) {
+    setState(() {
+      db.toDoList[index][1] = !db.toDoList[index][1];
+    });
+    //db.updateDataBase();
+  }
+
+  void saveNewtask() {
+    setState(() {
+      db.toDoList.add([_controller.text, false]);
+      _controller.clear();
+    });
+    Navigator.of(context).pop();
+    db.updateDataBase();
+  }
+
+  void createNewtask() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: saveNewtask,
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+    db.updateDataBase();
+  }
+
+  void deleteTask(int index)
+  {
+    setState(() {
+      db.toDoList.removeAt(index);
+    });
+    db.updateDataBase();
+  }
+
+
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
-          title: const Text("Home"),
-          centerTitle: true,
+          title: const Text("TO DO"),
+          elevation: 0,
         ),
-        drawer: const SafeDrawer(),
-        body: RefreshIndicator(
-          edgeOffset: 0.1,
-          backgroundColor: Colors.black,
-          color: Colors.white,
-          onRefresh: () async {
-            var url = Uri.parse(
-                "https://goquotes-api.herokuapp.com/api/v1/random?count=1");
-            var response = await http.get(url);
-            print("response status: ${response.statusCode}");
-            print("response body : ${response.body}");
-
-            var data = jsonDecode(response.body);
-            print(data["quotes"][0]);
-
-            quote = (data["quotes"][0]["text"]);
-            author = (data["quotes"][0]["author"]);
-
-            setState(() {});
+        floatingActionButton: FloatingActionButton(
+          onPressed: createNewtask,
+          child: Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: db.toDoList.length,
+          itemBuilder: (context, index) {
+            return ToDoTile(
+                taskName: db.toDoList[index][0],
+                taskCompleted: db.toDoList[index][1],
+                onChanged: (value) => checkBoxChanged(value, index),
+              deleteFunction: (context) => deleteTask(index));
           },
-          child: ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      height: 150,
-                      width: 500,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(width: 0.1),
-                          borderRadius:
-                          const BorderRadius.all(Radius.circular(5))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                              child: Text(quote,
-                                  style: const TextStyle(fontSize: 17))),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 250),
-                            child: Text(
-                              "- $author",
-                              style: const TextStyle(fontSize: 17),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "API Calls on refresh  ⬆",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

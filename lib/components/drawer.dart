@@ -1,4 +1,5 @@
 import 'package:authentication/Screens/ImageOpener.dart';
+import 'package:authentication/Screens/Timer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../AuthService.dart';
@@ -62,6 +63,12 @@ class _SafeDrawerState extends State<SafeDrawer> {
                   AuthService().signOut();
                 },
                 child: const Text("Log out")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TimerPage()));
+                },
+                child: Text("Timer"))
           ],
         ),
       ),

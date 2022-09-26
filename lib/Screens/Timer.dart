@@ -26,16 +26,12 @@ class _TimerPageState extends State<TimerPage> {
     });
   }
 
-  void _StopTimer()
-  {
-    timer?.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           title: const Text("Timer"),
           centerTitle: true,
         ),
@@ -45,7 +41,7 @@ class _TimerPageState extends State<TimerPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                timeLeft.toString(),
+                timeLeft ==0 ? "Done" :timeLeft.toString(),
                 style: const TextStyle(fontSize: 70),
               ),
               Row(
@@ -63,9 +59,7 @@ class _TimerPageState extends State<TimerPage> {
                   ), //Start
                   MaterialButton(
                     color: Colors.deepPurple,
-                    onPressed: () {
-                      _StopTimer();
-                    },
+                    onPressed: () {},
                     child: const Text(
                       "P A U S E",
                       style: TextStyle(color: Colors.white, fontSize: 20),
