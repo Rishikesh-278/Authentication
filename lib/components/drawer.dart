@@ -16,51 +16,55 @@ class _SafeDrawerState extends State<SafeDrawer> {
     return SafeArea(
       child: Drawer(
         width: 250,
+        backgroundColor: Colors.white,
         child: Column(
           children: <Widget>[
             Container(
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               child: Column(
-                children: <Widget> [
-                  SizedBox(height: 50),
+                children: <Widget>[
+                  const SizedBox(height: 50),
                   Row(
-                    children: <Widget> [
-                      SizedBox(width: 10),
+                    children: <Widget>[
+                      const SizedBox(width: 10),
                       GestureDetector(
-                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const ImageOpener()));},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ImageOpener()));
+                        },
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+                          backgroundImage: NetworkImage(
+                              FirebaseAuth.instance.currentUser!.photoURL!),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
-                      SizedBox(width: 10),
-                      Text(FirebaseAuth.instance.currentUser!.displayName!,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                      const SizedBox(width: 10),
+                      Text(
+                        FirebaseAuth.instance.currentUser!.displayName!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
                     ],
-                  )
-
+                  ),
                 ],
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  AuthService().signOut();
+                },
+                child: const Text("Log out")),
           ],
         ),
       ),
     );
   }
 }
-
-
-/*
-MaterialButton(
-color: Colors.green,
-child: const Text("Log out"),
-onPressed: () {
-AuthService().signOut();
-})
- */

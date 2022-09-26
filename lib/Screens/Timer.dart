@@ -12,7 +12,6 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
 
   Timer? timer;
-
   int timeLeft = 5;
 
   void _StartCountDown() {
@@ -34,64 +33,66 @@ class _TimerPageState extends State<TimerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Timer"),
-        centerTitle: true,
-      ),
-      drawer: const SafeDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              timeLeft.toString(),
-              style: const TextStyle(fontSize: 70),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                MaterialButton(
-                  color: Colors.deepPurple,
-                  onPressed: () {
-                    _StartCountDown();
-                  },
-                  child: const Text(
-                    "S T A R T",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ), //Start
-                MaterialButton(
-                  color: Colors.deepPurple,
-                  onPressed: () {
-                    _StopTimer();
-                  },
-                  child: const Text(
-                    "P A U S E",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ), //Pause
-              ],
-            ),
-            IconButton(
-              iconSize: 50,
-              color: Colors.deepPurple,
-                onPressed: () {
-                timeLeft = 5;
-                },
-                icon: const Icon(
-                  Icons.restart_alt_sharp,
-                ),
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Timer"),
+          centerTitle: true,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          timeLeft = timeLeft + 10;
-        },
-        child: const Text("+",
-        style: TextStyle(fontSize: 35),),
+        drawer: const SafeDrawer(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                timeLeft.toString(),
+                style: const TextStyle(fontSize: 70),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  MaterialButton(
+                    color: Colors.deepPurple,
+                    onPressed: () {
+                      _StartCountDown();
+                    },
+                    child: const Text(
+                      "S T A R T",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ), //Start
+                  MaterialButton(
+                    color: Colors.deepPurple,
+                    onPressed: () {
+                      _StopTimer();
+                    },
+                    child: const Text(
+                      "P A U S E",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ), //Pause
+                ],
+              ),
+              IconButton(
+                iconSize: 50,
+                color: Colors.deepPurple,
+                  onPressed: () {
+                  timeLeft = 5;
+                  },
+                  icon: const Icon(
+                    Icons.restart_alt_sharp,
+                  ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            timeLeft = timeLeft + 10;
+          },
+          child: const Text("+",
+          style: TextStyle(fontSize: 35),),
+        ),
       ),
     );
   }
