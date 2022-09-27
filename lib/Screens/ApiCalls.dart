@@ -30,7 +30,7 @@ class _ApiCallsState extends State<ApiCalls> {
           color: Colors.white,
           onRefresh: () async {
             var url = Uri.parse(
-                "https://goquotes-api.herokuapp.com/api/v1/random?count=1");
+                "https://quotes15.p.rapidapi.com/?rapidapi-key=1eaf2d797cmsh72d8b01a61aadf3p1d8e22jsn9210e689d3f1/quotes/random/?language_code=en%20HTTP/1.1");
             var response = await http.get(url);
             print("response status: ${response.statusCode}");
             print("response body : ${response.body}");

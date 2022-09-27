@@ -14,7 +14,9 @@ class _ImageOpenerState extends State<ImageOpener> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Image"),
+        title: Text("Image",style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => [
@@ -25,25 +27,26 @@ class _ImageOpenerState extends State<ImageOpener> {
                       Clipboard.setData(ClipboardData(
                           text: FirebaseAuth.instance.currentUser!.photoURL!));
                       const snackBar = SnackBar(
-                        backgroundColor: Colors.blueGrey,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.grey,
                         content:
                         Text('Image URL copied', textAlign: TextAlign.center),
-                        duration: Duration(seconds: 3),
+                        duration: Duration(seconds: 1),
+                        width: 200,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    };
+                    }
                   },
                   child: const Text(
                     "Copy Image URL",
                   ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
-        backgroundColor: Colors.black,
       ),
       body: Image.network(
         FirebaseAuth.instance.currentUser!.photoURL!,
@@ -51,11 +54,7 @@ class _ImageOpenerState extends State<ImageOpener> {
         height: double.infinity,
         fit: BoxFit.fitWidth,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[900],
     );
   }
 }
-
-/*
-
- */

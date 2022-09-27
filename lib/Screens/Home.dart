@@ -6,6 +6,8 @@ import 'package:authentication/utils/dialog_box.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../components/drawer.dart';
+
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
@@ -81,8 +83,10 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           title: const Text("TO DO"),
+          centerTitle: true,
           elevation: 0,
         ),
+        drawer: SafeDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: createNewtask,
           child: Icon(Icons.add),
