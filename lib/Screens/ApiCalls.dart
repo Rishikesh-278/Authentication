@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:authentication/components/drawer.dart';
 import 'dart:convert';
+import 'dart:math';
+import 'package:authentication/api_key.dart';
 
 String quote = "";
 String author = "";
+String words = "";
 
 class ApiCalls extends StatefulWidget {
   const ApiCalls({Key? key}) : super(key: key);
@@ -30,16 +33,16 @@ class _ApiCallsState extends State<ApiCalls> {
           color: Colors.white,
           onRefresh: () async {
             var url = Uri.parse(
-                "https://quotes15.p.rapidapi.com/?rapidapi-key=1eaf2d797cmsh72d8b01a61aadf3p1d8e22jsn9210e689d3f1/quotes/random/?language_code=en%20HTTP/1.1");
+                "https://famous-quotes4.p.rapidapi.com/?rapidapi-key=$Api_Key");
             var response = await http.get(url);
             print("response status: ${response.statusCode}");
             print("response body : ${response.body}");
 
             var data = jsonDecode(response.body);
-            print(data["quotes"][0]);
+            print(data);
 
-            quote = (data["quotes"][0]["text"]);
-            author = (data["quotes"][0]["author"]);
+            words = (data[Random().nextInt(100)]);
+            //author = (data["quotes"][0]["author"]);
 
             setState(() {});
           },
@@ -62,7 +65,7 @@ class _ApiCallsState extends State<ApiCalls> {
                         //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                              child: Text(quote,
+                              child: Text(words,
                                   style: const TextStyle(fontSize: 17))),
                           const SizedBox(height: 10),
                           Padding(
