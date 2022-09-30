@@ -7,7 +7,7 @@ import 'package:authentication/api_key.dart';
 
 String quote = "";
 String author = "";
-String words = "";
+//String words = "";
 
 class ApiCalls extends StatefulWidget {
   const ApiCalls({Key? key}) : super(key: key);
@@ -32,16 +32,24 @@ class _ApiCallsState extends State<ApiCalls> {
           backgroundColor: Colors.black,
           color: Colors.white,
           onRefresh: () async {
-            var url = Uri.parse(
-                "https://famous-quotes4.p.rapidapi.com/?rapidapi-key=$Api_Key");
+            var url = Uri.parse("https://stoic-quotes.com/api/quote");
             var response = await http.get(url);
             print("response status: ${response.statusCode}");
+            if (response.statusCode != 200) {
+              print("Failed");
+            }
             print("response body : ${response.body}");
 
             var data = jsonDecode(response.body);
             print(data);
 
-            words = (data[Random().nextInt(100)]);
+            quote = (data["text"]);
+            author = (data["author"]);
+            //words = (data[Random().nextInt(100)]);
+            /*
+            This words API generates list of 117 words, The above line of code choose one random word out of 100,
+            https://famous-quotes4.p.rapidapi.com/?rapidapi-key=$Api_Key
+             */
             //author = (data["quotes"][0]["author"]);
 
             setState(() {});
@@ -50,8 +58,13 @@ class _ApiCallsState extends State<ApiCalls> {
             children: <Widget>[
               Column(
                 children: <Widget>[
+                  Text(
+                    "Stoicism quotes",
+                    style: TextStyle(fontSize: 22),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding:
+                        const EdgeInsets.only(left: 10, bottom: 10, right: 10),
                     child: Container(
                       height: 150,
                       width: 500,
@@ -59,13 +72,13 @@ class _ApiCallsState extends State<ApiCalls> {
                           color: Colors.grey[300],
                           border: Border.all(width: 0.1),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(5))),
+                              const BorderRadius.all(Radius.circular(5))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                              child: Text(words,
+                              child: Text(quote,
                                   style: const TextStyle(fontSize: 17))),
                           const SizedBox(height: 10),
                           Padding(
