@@ -1,13 +1,15 @@
+import 'dart:convert';
+import 'package:authentication/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:authentication/components/drawer.dart';
-import 'dart:convert';
-import 'dart:math';
+import 'package:openai_gpt3_api/openai_gpt3_api.dart';
 import 'package:authentication/api_key.dart';
 
 String quote = "";
 String author = "";
 //String words = "";
+
+var api = GPT3(OpenAi_Key);
 
 class ApiCalls extends StatefulWidget {
   const ApiCalls({Key? key}) : super(key: key);
@@ -46,10 +48,12 @@ class _ApiCallsState extends State<ApiCalls> {
             quote = (data["text"]);
             author = (data["author"]);
             //words = (data[Random().nextInt(100)]);
+
             /*
             This words API generates list of 117 words, The above line of code choose one random word out of 100,
             https://famous-quotes4.p.rapidapi.com/?rapidapi-key=$Api_Key
              */
+
             //author = (data["quotes"][0]["author"]);
 
             setState(() {});
@@ -58,7 +62,7 @@ class _ApiCallsState extends State<ApiCalls> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text(
+                  const Text(
                     "Stoicism quotes",
                     style: TextStyle(fontSize: 22),
                   ),
@@ -106,6 +110,10 @@ class _ApiCallsState extends State<ApiCalls> {
                   ),
                 ],
               ),
+              TextButton(onPressed: () async {
+               //var result = await api.search();
+
+              }, child: Text("Press"))
             ],
           ),
         ),
