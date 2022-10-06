@@ -1,15 +1,18 @@
+import 'dart:convert' as convert;
 import 'dart:convert';
+import 'dart:io';
 import 'package:authentication/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:openai_gpt3_api/openai_gpt3_api.dart';
 import 'package:authentication/api_key.dart';
 
 String quote = "";
 String author = "";
 //String words = "";
+String jsonR = "";
+String data = "";
 
-var api = GPT3(OpenAi_Key);
+var url = Uri.parse("https://api.openai.com/v1/completions");
 
 class ApiCalls extends StatefulWidget {
   const ApiCalls({Key? key}) : super(key: key);
@@ -19,6 +22,46 @@ class ApiCalls extends StatefulWidget {
 }
 
 class _ApiCallsState extends State<ApiCalls> {
+
+  /*
+  static Future<dynamic> answer(
+    String? model,
+    String? prompt,
+    double? temperature,
+    int? max_tokens,
+    double? top_p,
+    double? frequency_penalty,
+    double? presence_penalty,
+    String? stop,
+  ) async {
+    Map reqData() => {
+          "model": model,
+          "prompt": prompt,
+          'temperature': temperature,
+          'max_tokens': max_tokens,
+          'top+p': top_p,
+          'frequency_penalty': frequency_penalty,
+          'presence_penalty': presence_penalty,
+          "stop": ["\n"]
+        };
+    {
+      var response = await http.post(url,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $ApiKey"
+          },
+          body: convert.jsonEncode(reqData()));
+      if (response.statusCode == 200) {
+        var jsonResponse =
+            convert.jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    }
+  }
+
+   */
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -110,10 +153,42 @@ class _ApiCallsState extends State<ApiCalls> {
                   ),
                 ],
               ),
-              TextButton(onPressed: () async {
-               //var result = await api.search();
+              TextButton(
+                  onPressed: ()  async {
+                    print("Works");
+                    var response = await http.post(url,
+                      body: convert.jsonEncode({
+                        "model": "text-davinci-002",
+                        "prompt":
+                        "Convert movie titles into emoji.\n\nBack to the Future: 👨👴🚗🕒 \nBatman: 🤵🦇 \nTransformers: 🚗🤖 \nStar Wars:",
+                        "temperature": 0.8,
+                        "max_tokens": 60,
+                        "top_p": 1.0,
+                        "frequency_penalty": 0.0,
+                        "presence_penalty": 0.0,
+                        "stop": ["\n"]
+                      }),
+                        headers: {
+                          "Content-Type": "application/json",
+                          "Accept": "application/json",
+                          "Authorization": "Bearer $ApiKey"
+                        },);
+                    if (response.statusCode == 200) {
+                      var jsonResponse = convert.jsonDecode(response.body);
+                      jsonR = jsonResponse.toString();
 
-              }, child: Text("Press"))
+                      data = (jsonResponse["choices"][0]["text"]);
+                      print(data);
+                      print(jsonResponse);
+                    } else {
+                      print(
+                          'Request failed with status: ${response.statusCode}');
+                    }
+                  },
+                  child: Text("Press")),
+              Container(
+                child: Text(data),
+              )
             ],
           ),
         ),
