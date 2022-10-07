@@ -22,7 +22,6 @@ class ApiCalls extends StatefulWidget {
 }
 
 class _ApiCallsState extends State<ApiCalls> {
-
   /*
   static Future<dynamic> answer(
     String? model,
@@ -154,13 +153,14 @@ class _ApiCallsState extends State<ApiCalls> {
                 ],
               ),
               TextButton(
-                  onPressed: ()  async {
+                  onPressed: () async {
                     print("Works");
-                    var response = await http.post(url,
+                    var response = await http.post(
+                      url,
                       body: convert.jsonEncode({
                         "model": "text-davinci-002",
                         "prompt":
-                        "Convert movie titles into emoji.\n\nBack to the Future: 👨👴🚗🕒 \nBatman: 🤵🦇 \nTransformers: 🚗🤖 \nStar Wars:",
+                            "Convert movie titles into emoji.\n\nBack to the Future: 👨👴🚗🕒",
                         "temperature": 0.8,
                         "max_tokens": 60,
                         "top_p": 1.0,
@@ -168,11 +168,12 @@ class _ApiCallsState extends State<ApiCalls> {
                         "presence_penalty": 0.0,
                         "stop": ["\n"]
                       }),
-                        headers: {
-                          "Content-Type": "application/json",
-                          "Accept": "application/json",
-                          "Authorization": "Bearer $ApiKey"
-                        },);
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": "Bearer $ApiKey"
+                      },
+                    );
                     if (response.statusCode == 200) {
                       var jsonResponse = convert.jsonDecode(response.body);
                       jsonR = jsonResponse.toString();
@@ -185,10 +186,15 @@ class _ApiCallsState extends State<ApiCalls> {
                           'Request failed with status: ${response.statusCode}');
                     }
                   },
-                  child: Text("Press")),
-              Container(
-                child: Text(data),
-              )
+                  child: const Text("Press")),
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Enter Movie/TV show name"),
+                ),
+              ),
             ],
           ),
         ),
