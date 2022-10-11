@@ -1,16 +1,15 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
-import 'dart:io';
+import 'package:authentication/api_key.dart';
 import 'package:authentication/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:authentication/api_key.dart';
 
-String quote = "";
-String author = "";
-//String words = "";
-String jsonR = "";
-String data = "";
+String quote = ""; //The quote
+String author = ""; //Author of the Stoicism
+String jsonR = ""; //A String to Convert the JSON response to String
+String data = ""; //A String to extract the Emojis from the JSON response
+String outPutString = "";
 
 var url = Uri.parse("https://api.openai.com/v1/completions");
 
@@ -22,44 +21,103 @@ class ApiCalls extends StatefulWidget {
 }
 
 class _ApiCallsState extends State<ApiCalls> {
-  /*
-  static Future<dynamic> answer(
-    String? model,
-    String? prompt,
-    double? temperature,
-    int? max_tokens,
-    double? top_p,
-    double? frequency_penalty,
-    double? presence_penalty,
-    String? stop,
-  ) async {
-    Map reqData() => {
-          "model": model,
-          "prompt": prompt,
-          'temperature': temperature,
-          'max_tokens': max_tokens,
-          'top+p': top_p,
-          'frequency_penalty': frequency_penalty,
-          'presence_penalty': presence_penalty,
-          "stop": ["\n"]
-        };
-    {
-      var response = await http.post(url,
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $ApiKey"
-          },
-          body: convert.jsonEncode(reqData()));
-      if (response.statusCode == 200) {
-        var jsonResponse =
-            convert.jsonDecode(response.body) as Map<String, dynamic>;
-      } else {
-        print('Request failed with status: ${response.statusCode}');
-      }
-    }
-  }
+  TextEditingController movieController = TextEditingController();
+  TextEditingController jobController = TextEditingController();
 
-   */
+   ButtonDisable() {
+    if (movieController.text == "${movieController.text}")
+    {
+      TextButton(
+        onPressed: () async {
+          var response = await http.post(
+            url,
+            body: convert.jsonEncode({
+              "model": "text-davinci-002",
+              "prompt":
+                  "Convert movie titles into emoji.\n\n${movieController.text}:",
+              "temperature": 0.8,
+              "max_tokens": 60,
+              "top_p": 1.0,
+              "frequency_penalty": 0.0,
+              "presence_penalty": 0.0,
+              "stop": ["\n"]
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $ApiKey"
+            },
+          );
+
+          if (response.statusCode == 200) {
+            var jsonResponse = convert.jsonDecode(response.body);
+            jsonR = jsonResponse.toString();
+
+            data = (jsonResponse["choices"][0]["text"]);
+            //Extracting the Emoji from the JSON response
+            print(data);
+
+            if (data == "") {
+              print("Error");
+            }
+            print(jsonResponse);
+          } else {
+            print('Request failed with status: ${response.statusCode}');
+          }
+          setState(() {
+            outPutString = data; //Displays the emojis
+          });
+        },
+        child: Text("Submit"),
+      );
+    }
+    else
+      {
+        TextButton(
+          onPressed: () async {
+            var response = await http.post(
+              url,
+              body: convert.jsonEncode({
+                "model": "text-davinci-002",
+                "prompt":
+                "Convert movie titles into emoji.\n\n${movieController.text}:",
+                "temperature": 0.8,
+                "max_tokens": 60,
+                "top_p": 1.0,
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "stop": ["\n"]
+              }),
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Bearer $ApiKey"
+              },
+            );
+
+            if (response.statusCode == 200) {
+              var jsonResponse = convert.jsonDecode(response.body);
+              jsonR = jsonResponse.toString();
+
+              data = (jsonResponse["choices"][0]["text"]);
+              //Extracting the Emoji from the JSON response
+              print(data);
+
+              if (data == "") {
+                print("Error");
+              }
+              print(jsonResponse);
+            } else {
+              print('Request failed with status: ${response.statusCode}');
+            }
+            setState(() {
+              outPutString = data; //Displays the emojis
+            });
+          },
+          child: Text("Submit"),
+        );
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,29 +134,44 @@ class _ApiCallsState extends State<ApiCalls> {
           backgroundColor: Colors.black,
           color: Colors.white,
           onRefresh: () async {
-            var url = Uri.parse("https://stoic-quotes.com/api/quote");
-            var response = await http.get(url);
-            print("response status: ${response.statusCode}");
-            if (response.statusCode != 200) {
-              print("Failed");
-            }
-            print("response body : ${response.body}");
+            {
+              var url = Uri.parse("https://stoic-quotes.com/api/quote");
+              var response = await http.get(url);
+              print("response status: ${response.statusCode}");
+              if (response.statusCode != 200) {
+                print("Failed");
+              }
+              print("response body : ${response.body}");
 
-            var data = jsonDecode(response.body);
-            print(data);
+              var data = jsonDecode(response.body);
+              print(data);
 
-            quote = (data["text"]);
-            author = (data["author"]);
-            //words = (data[Random().nextInt(100)]);
+              quote = (data["text"]);
+              author = (data["author"]);
+              //words = (data[Random().nextInt(100)]);
 
-            /*
+              /*
             This words API generates list of 117 words, The above line of code choose one random word out of 100,
             https://famous-quotes4.p.rapidapi.com/?rapidapi-key=$Api_Key
              */
 
-            //author = (data["quotes"][0]["author"]);
+              //author = (data["quotes"][0]["author"]);
 
-            setState(() {});
+              setState(() {});
+            }
+            movieController.clear(); //To clear the text from the text field
+            outPutString = ""; //TO clear the outut
+            /*
+            {
+              var Imgurl = Uri.parse("https://thisartworkdoesnotexist.com/");
+              var ImgResponse = await http
+                  .get(Imgurl, headers: {"Content-Type": "image/jpeg"});
+              print(ImgResponse);
+              if (ImgResponse.statusCode == 200) {
+                print("Image workss");
+              }
+            }
+             */
           },
           child: ListView(
             children: <Widget>[
@@ -152,6 +225,7 @@ class _ApiCallsState extends State<ApiCalls> {
                   ),
                 ],
               ),
+              /*
               TextButton(
                   onPressed: () async {
                     print("Works");
@@ -160,7 +234,7 @@ class _ApiCallsState extends State<ApiCalls> {
                       body: convert.jsonEncode({
                         "model": "text-davinci-002",
                         "prompt":
-                            "Convert movie titles into emoji.\n\nBack to the Future: 👨👴🚗🕒",
+                            "Convert movie titles into emoji.\n\nBack to the Future: 👨👴🚗🕒 \nBatman: 🤵🦇 \nTransformers: 🚗🤖 \nStar Wars:",
                         "temperature": 0.8,
                         "max_tokens": 60,
                         "top_p": 1.0,
@@ -179,7 +253,8 @@ class _ApiCallsState extends State<ApiCalls> {
                       jsonR = jsonResponse.toString();
 
                       data = (jsonResponse["choices"][0]["text"]);
-                      print(data);
+                      print(Rusty);
+
                       print(jsonResponse);
                     } else {
                       print(
@@ -187,14 +262,80 @@ class _ApiCallsState extends State<ApiCalls> {
                     }
                   },
                   child: const Text("Press")),
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
+      */
+              const SizedBox(height: 30),
+              const Center(
+                  child: Text(
+                "Movie titles to emoji",
+                style: TextStyle(fontSize: 30),
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: movieController,
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Enter Movie/TV show name"),
                 ),
               ),
+              const SizedBox(height: 5),
+              Row(children: <Widget>[
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "${(movieController.text)} : $outPutString",
+                    style: TextStyle(fontSize: 25),
+                    maxLines: 2,
+                  ),
+                ),
+              ]),
+              Padding(
+                padding: const EdgeInsets.only(left: 150, right: 150),
+                child: TextButton(
+                  style: TextButton.styleFrom(backgroundColor: Colors.black),
+                  onPressed: () async {
+                    var response = await http.post(
+                      url,
+                      body: convert.jsonEncode({
+                        "model": "text-davinci-002",
+                        "prompt":
+                        "Convert movie titles into emoji.\n\n${movieController.text}:",
+                        "temperature": 0.8,
+                        "max_tokens": 60,
+                        "top_p": 1.0,
+                        "frequency_penalty": 0.0,
+                        "presence_penalty": 0.0,
+                        "stop": ["\n"]
+                      }),
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": "Bearer $ApiKey"
+                      },
+                    );
+
+                    if (response.statusCode == 200) {
+                      var jsonResponse = convert.jsonDecode(response.body);
+                      jsonR = jsonResponse.toString();
+
+                      data = (jsonResponse["choices"][0]["text"]);
+                      //Extracting the Emoji from the JSON response
+                      print(data);
+
+                      if (data == "") {
+                        print("Error");
+                      }
+                      print(jsonResponse);
+                    } else {
+                      print('Request failed with status: ${response.statusCode}');
+                    }
+                    setState(() {
+                      outPutString = data; //Displays the emojis
+                    });
+                  },
+                  child: Text("Submit"),
+                ),
+              ), //Submit button
             ],
           ),
         ),
@@ -202,3 +343,5 @@ class _ApiCallsState extends State<ApiCalls> {
     );
   }
 }
+
+//curl -H "Content-Type: application/json" -H "apikey: 0000000000" -d '{"prompt":"A horde of stable robots", "params":{"n":1, "width": 256, "height": 256}}' https://stablehorde.net/api/v2/generate/sync
