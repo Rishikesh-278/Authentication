@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:authentication/api_key.dart';
 import 'package:authentication/components/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 String quote = ""; //The quote
@@ -10,6 +11,11 @@ String author = ""; //Author of the Stoicism
 String jsonR = ""; //A String to Convert the JSON response to String
 String data = ""; //A String to extract the Emojis from the JSON response
 String outPutString = "";
+
+double currentSliderValue = 1;
+double ApiTop_p = 1;
+double ApiMax_tokens = 60;
+double ApiTemperature = 0.8;
 
 var url = Uri.parse("https://api.openai.com/v1/completions");
 
@@ -24,6 +30,7 @@ class _ApiCallsState extends State<ApiCalls> {
   TextEditingController movieController = TextEditingController();
   TextEditingController jobController = TextEditingController();
 
+  /*
    ButtonDisable() {
     if (movieController.text == "${movieController.text}")
     {
@@ -118,6 +125,7 @@ class _ApiCallsState extends State<ApiCalls> {
         );
       }
   }
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +142,11 @@ class _ApiCallsState extends State<ApiCalls> {
           backgroundColor: Colors.black,
           color: Colors.white,
           onRefresh: () async {
+            {
+              ApiTemperature = 0.5;
+              ApiTop_p = 0.5;
+              ApiMax_tokens = 30;
+            }
             {
               var url = Uri.parse("https://stoic-quotes.com/api/quote");
               var response = await http.get(url);
@@ -197,8 +210,28 @@ class _ApiCallsState extends State<ApiCalls> {
                         //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                              child: Text(quote,
-                                  style: const TextStyle(fontSize: 17))),
+                              child: GestureDetector(
+                            onLongPress: () {
+                              {
+                                Clipboard.setData(ClipboardData(text: quote));
+                                const snackBar = SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.grey,
+                                  content: Text("Quote copied",
+                                      textAlign: TextAlign.center),
+                                  duration: Duration(seconds: 1),
+                                  width: 200,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                            },
+                            child: Text(quote,
+                                style: const TextStyle(fontSize: 17)),
+                          )),
                           const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(left: 250),
@@ -272,20 +305,146 @@ class _ApiCallsState extends State<ApiCalls> {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   controller: movieController,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Enter Movie/TV show name"),
                 ),
               ),
-              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Please use the sliders",style: TextStyle(fontSize: 20),),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    "temperature",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    //margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: Colors.black),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: Text(
+                        ApiTemperature.toString(),
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  )
+                ],
+              ), //max_tokens and value
+              Slider(
+                  min: 0.0,
+                  max: 1,
+                  label: currentSliderValue.round().toString(),
+                  value: ApiTemperature,
+                  onChanged: (double value) {
+                    setState(() {
+                      ApiTemperature = value;
+                    });
+                  }),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    "max_tokens",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    //margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: Colors.black),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: Text(
+                        ApiMax_tokens.toString(),
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  )
+                ],
+              ), //max_tokens and value
+              Slider(
+                  min: 0.0,
+                  max: 60.0,
+                  label: currentSliderValue.round().toString(),
+                  value: ApiMax_tokens,
+                  onChanged: (double value) {
+                    setState(() {
+                      ApiMax_tokens = value;
+                    });
+                  }), //max_tokens slider
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    "Top_P",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    //margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: Colors.black),
+                        borderRadius: const BorderRadius.all(Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        ApiTop_p.toString(),
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  )
+                ],
+              ), //Top_p and value
+              Slider(
+                  min: 0.0,
+                  max: 1,
+                  label: currentSliderValue.round().toString(),
+                  value: ApiTop_p,
+                  onChanged: (double value) {
+                    setState(() {
+                      ApiTop_p = value;
+                    });
+                  }), //Top_p's slider
+
+
               Row(children: <Widget>[
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     "${(movieController.text)} : $outPutString",
-                    style: TextStyle(fontSize: 25),
-                    maxLines: 2,
+                    style: TextStyle(fontSize: 20),
+                    maxLines: 100,
                   ),
                 ),
               ]),
@@ -299,10 +458,10 @@ class _ApiCallsState extends State<ApiCalls> {
                       body: convert.jsonEncode({
                         "model": "text-davinci-002",
                         "prompt":
-                        "Convert movie titles into emoji.\n\n${movieController.text}:",
-                        "temperature": 0.8,
-                        "max_tokens": 60,
-                        "top_p": 1.0,
+                            "Convert movie titles into emoji.\n\n${movieController.text}:",
+                        "temperature": ApiTemperature.toDouble(),
+                        "max_tokens": ApiMax_tokens.toInt(),
+                        "top_p": ApiTop_p,
                         "frequency_penalty": 0.0,
                         "presence_penalty": 0.0,
                         "stop": ["\n"]
@@ -313,21 +472,23 @@ class _ApiCallsState extends State<ApiCalls> {
                         "Authorization": "Bearer $ApiKey"
                       },
                     );
-
                     if (response.statusCode == 200) {
-                      var jsonResponse = convert.jsonDecode(response.body);
+                      var jsonResponse = convert.jsonDecode(utf8.decode(response.bodyBytes));
                       jsonR = jsonResponse.toString();
-
                       data = (jsonResponse["choices"][0]["text"]);
                       //Extracting the Emoji from the JSON response
                       print(data);
 
-                      if (data == "") {
+                      print(response.headers);
+                      if (data == "")
+                      {
                         print("Error");
                       }
                       print(jsonResponse);
-                    } else {
-                      print('Request failed with status: ${response.statusCode}');
+                    } else
+                    {
+                      print(
+                          'Request failed with status: ${response.statusCode}');
                     }
                     setState(() {
                       outPutString = data; //Displays the emojis
