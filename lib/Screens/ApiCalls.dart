@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:authentication/api_key.dart';
 import 'package:authentication/components/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 String quote = ""; //The quote
@@ -188,6 +187,7 @@ class _ApiCallsState extends State<ApiCalls> {
           },
           child: ListView(
             children: <Widget>[
+              /*
               Column(
                 children: <Widget>[
                   const Text(
@@ -296,6 +296,9 @@ class _ApiCallsState extends State<ApiCalls> {
                   },
                   child: const Text("Press")),
       */
+
+               */
+
               const SizedBox(height: 30),
               const Center(
                   child: Text(
@@ -313,13 +316,22 @@ class _ApiCallsState extends State<ApiCalls> {
                       hintText: "Enter Movie/TV show name"),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Please use the sliders",style: TextStyle(fontSize: 20),),
-                ],
-              ),
-              const SizedBox(height: 20),
+              //const SizedBox(height: 20),
+
+              Row(children: <Widget>[
+                const SizedBox(width: 10),
+                Text("Result",style: TextStyle(fontSize: 25),),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "${(movieController.text)} : $outPutString",
+                    style: TextStyle(fontSize: 20),
+                    maxLines: 100,
+                  ),
+                ),
+              ]), //OutPut
+
+              SizedBox(height: 30),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -348,7 +360,7 @@ class _ApiCallsState extends State<ApiCalls> {
                     ),
                   )
                 ],
-              ), //max_tokens and value
+              ), //Temperature and value
               Slider(
                   min: 0.0,
                   max: 1,
@@ -398,6 +410,7 @@ class _ApiCallsState extends State<ApiCalls> {
                       ApiMax_tokens = value;
                     });
                   }), //max_tokens slider
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -405,7 +418,7 @@ class _ApiCallsState extends State<ApiCalls> {
                     width: 10,
                   ),
                   const Text(
-                    "Top_P",
+                    "Top_p",
                     style: TextStyle(fontSize: 15),
                   ),
                   const SizedBox(
@@ -415,9 +428,9 @@ class _ApiCallsState extends State<ApiCalls> {
                     //margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         border: Border.all(width: 1, color: Colors.black),
-                        borderRadius: const BorderRadius.all(Radius.circular(5))),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Padding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(1),
                       child: Text(
                         ApiTop_p.toString(),
                         style: const TextStyle(fontSize: 15),
@@ -438,16 +451,6 @@ class _ApiCallsState extends State<ApiCalls> {
                   }), //Top_p's slider
 
 
-              Row(children: <Widget>[
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    "${(movieController.text)} : $outPutString",
-                    style: TextStyle(fontSize: 20),
-                    maxLines: 100,
-                  ),
-                ),
-              ]),
               Padding(
                 padding: const EdgeInsets.only(left: 150, right: 150),
                 child: TextButton(
